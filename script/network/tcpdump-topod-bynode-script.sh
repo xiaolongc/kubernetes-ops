@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ $1 = "--help" ]] || [[ $1 = "-h" ]|| [[ $1 = "help" ]]
+if [[ $1 = "--help" ]] || [[ $1 = "-h" ]] || [[ $1 = "help" ]]
 then
     echo "使用node节点的tcpdump命令对特定pod抓包，脚本在能使用kuberlet的主机"
-    echo "./script/network/tcpdump-topod-bynode-script.sh namespace podName"
+    echo "./script/network/tcpdump-topod-node-script.sh namespace podName"
     exit 0
 fi
 set -euxo pipefail
@@ -17,10 +17,8 @@ eval "$(kubectl get pod \
     | xargs -0 bash -c 'printf "${@}"' -- 'CONTAINER_ID=%q\nHOST_IP=%q')"
 
 if [[ ${CONTAINER_ID} == 'docker://'* ]]; then
-    CONTAINER_ENGINE=docker
     CONTAINER_ID=${CONTAINER_ID#'docker://'}
 elif [[ ${CONTAINER_ID} == 'containerd://'* ]]; then
-    CONTAINER_ENGINE=containerd
     CONTAINER_ID=${CONTAINER_ID#'containerd://'}
 fi
 
